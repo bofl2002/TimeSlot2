@@ -15,14 +15,13 @@ builder.Services.AddDbContext<TimeSlotContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDBConnection"));
 });
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TimeSlotContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<TimeSlotContext>();
 
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-    .AddEntityFrameworkStores<TimeSlotContext>();
+
 
 var app = builder.Build();
 
@@ -33,6 +32,7 @@ app.UseRouting();
 
 app.UseAuthorization();
 app.UseAuthentication();
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
