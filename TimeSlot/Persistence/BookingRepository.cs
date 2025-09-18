@@ -1,0 +1,66 @@
+﻿using Microsoft.EntityFrameworkCore;
+using TimeSlot.Data;
+using TimeSlot.Models;
+
+namespace TimeSlot.Persistence
+{
+    public class BookingRepository : IBookingRepository
+    {
+
+        private readonly TimeSlotContext _context;
+        public BookingRepository(TimeSlotContext context)
+        {
+            _context = context;
+        }
+
+   
+        public void Add(Booking booking)
+        {
+            if (booking != null)
+            {
+                _context.Add(booking);
+                _context.SaveChanges();
+            }
+         
+        }
+
+        public void Delete(int id)
+        {
+            var booking = _context.bookings.Find(id);
+            if (booking != null)
+            {
+                _context.Remove(booking);
+                _context.SaveChanges();
+            }
+        }
+
+        public List<Booking> GetAll()
+        {
+            return _context.bookings
+                .Include(b => b.Room)
+                .ToList();
+        }
+
+        public Booking? GetById(int id)
+        {
+            if (id != null)
+            {
+                var booking = _context.bookings.Find(id);
+                return (booking);
+            }
+            return null;
+        }
+
+        public void Update(Booking booking)
+        {
+            if (booking != null)
+            {
+                var bookings = _context.bookings.Find(booking.BookingId);
+                _context.Update(bookings);
+                _context.SaveChanges();
+            }
+        }
+    }
+
+    
+}
