@@ -26,7 +26,7 @@ namespace TimeSlot.Persistence
         {
             if (id != null)
             {
-                var room = _context.rooms.Find(id);
+                var room = _context.Rooms.Find(id);
                 _context.Remove(room);
                 _context.SaveChanges();
             }
@@ -35,14 +35,14 @@ namespace TimeSlot.Persistence
 
         public List<Room> GetAll()
         {
-            return _context.rooms.ToList();
+            return _context.Rooms.ToList();
         }
 
         public Room? GetById(int id)
         {
             if (id != null)
             {
-                var room = _context.rooms.Find(id);
+                var room = _context.Rooms.Find(id);
                 return (room);
             }
             return null;
@@ -53,7 +53,7 @@ namespace TimeSlot.Persistence
         {
             if (room != null)
             {
-                var rooms = _context.rooms.Find(room.RoomId);
+                var rooms = _context.Rooms.Find(room.RoomId);
                 _context.Update(room);
                 _context.SaveChanges();
             }

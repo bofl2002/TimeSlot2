@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using TimeSlot.Data;
+using TimeSlot.Models;
 using TimeSlot.Persistence;
 using TimeSlot.Services;
 
@@ -11,9 +14,13 @@ builder.Services.AddDbContext<TimeSlotContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDBConnection"));
 });
+
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IBookingService, BookingService>();
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<TimeSlotContext>();
 
 var app = builder.Build();
 
@@ -23,6 +30,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

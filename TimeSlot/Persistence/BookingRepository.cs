@@ -26,7 +26,7 @@ namespace TimeSlot.Persistence
 
         public void Delete(int id)
         {
-            var booking = _context.bookings.Find(id);
+            var booking = _context.Bookings.Find(id);
             if (booking != null)
             {
                 _context.Remove(booking);
@@ -36,7 +36,7 @@ namespace TimeSlot.Persistence
 
         public List<Booking> GetAll()
         {
-            return _context.bookings
+            return _context.Bookings
                 .Include(b => b.Room)
                 .ToList();
         }
@@ -45,7 +45,7 @@ namespace TimeSlot.Persistence
         {
             if (id != null)
             {
-                var booking = _context.bookings.Find(id);
+                var booking = _context.Bookings.Find(id);
                 return (booking);
             }
             return null;
@@ -55,7 +55,7 @@ namespace TimeSlot.Persistence
         {
             if (booking != null)
             {
-                var bookings = _context.bookings.Find(booking.BookingId);
+                var bookings = _context.Bookings.Find(booking.BookingId);
                 _context.Update(bookings);
                 _context.SaveChanges();
             }
