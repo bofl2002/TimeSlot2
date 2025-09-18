@@ -1,13 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TimeSlot.Models;
 using TimeSlot.Persistence;
 using TimeSlot.Services;
 using TimeSlot.ViewModels;
 
+
 namespace TimeSlot.Controllers
 {
+    [Authorize]
     public class BookingsController : Controller
     {
+       
         private readonly IRoomRepository _roomRepository;
         //private readonly IBookingRepository _bookingRepository;
         private readonly IBookingService _bookingService;
@@ -17,7 +22,7 @@ namespace TimeSlot.Controllers
             _bookingService = bookingService;
             _roomRepository = roomRepository;
         }
-
+        
         public IActionResult Index()
         {
             var bookings = _bookingService.GetAll();

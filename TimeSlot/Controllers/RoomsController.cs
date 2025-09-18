@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TimeSlot.Persistence;
 
+   
 namespace TimeSlot.Controllers
 {
+    [Authorize]
     public class RoomsController : Controller
     {
         private readonly IRoomRepository _roomRepository;
@@ -11,6 +14,7 @@ namespace TimeSlot.Controllers
         {
             _roomRepository = roomRepository;
         }
+        
         public IActionResult Index()
         {
             var rooms = _roomRepository.GetAll();

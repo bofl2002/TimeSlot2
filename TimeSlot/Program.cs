@@ -15,6 +15,8 @@ builder.Services.AddDbContext<TimeSlotContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyDBConnection"));
 });
 
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<TimeSlotContext>();
+
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IBookingService, BookingService>();
