@@ -9,6 +9,7 @@ namespace TimeSlot.Services
         List<Booking> GetAll();
         Booking? GetById(int id);
         void Update(Booking booking);
-        
+        List<Booking> GetAllByUserId(string userId);
+
     }
 }

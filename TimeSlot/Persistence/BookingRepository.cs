@@ -38,6 +38,8 @@ namespace TimeSlot.Persistence
         {
             return _context.Bookings
                 .Include(b => b.Room)
+                .Include(b => b.User)
+                .Where(b => b.StartTime >= DateTime.Now)
                 .ToList();
         }
 

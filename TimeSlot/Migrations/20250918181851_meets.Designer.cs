@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeSlot.Data;
 
@@ -11,9 +12,11 @@ using TimeSlot.Data;
 namespace TimeSlot.Migrations
 {
     [DbContext(typeof(TimeSlotContext))]
-    partial class TimeSlotContextModelSnapshot : ModelSnapshot
+    [Migration("20250918181851_meets")]
+    partial class meets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,7 +258,7 @@ namespace TimeSlot.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
 
                     b.HasData(
                         new
@@ -304,7 +307,7 @@ namespace TimeSlot.Migrations
 
                     b.HasKey("RoomId");
 
-                    b.ToTable("Rooms", (string)null);
+                    b.ToTable("Rooms");
 
                     b.HasData(
                         new

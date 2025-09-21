@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TimeSlot.Models;
 using TimeSlot.Persistence;
@@ -62,9 +64,6 @@ namespace TimeSlot.Services
         }
 
 
-
- 
-
         public void Add(Booking booking)
         {
             if (booking.EndTime <= booking.StartTime)
@@ -92,6 +91,17 @@ namespace TimeSlot.Services
             _bookingRepository.Add(booking);
         }
 
+        public async Task<IEnumerable<Booking>> GetAllByUserID(string userId)
+        {
+            return await Task.FromResult(_bookingRepository.GetAll().Where(b => b.UserId == userId));
+        }
 
+        public List<Booking> GetAllByUserId(string userId)
+        {
+            return _bookingRepository
+                .GetAll()
+                .Where(b => b.UserId == userId)
+                .ToList();
+        }
     }
 }

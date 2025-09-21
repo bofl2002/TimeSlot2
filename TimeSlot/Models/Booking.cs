@@ -30,5 +30,8 @@ namespace TimeSlot.Models
         [Required]
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

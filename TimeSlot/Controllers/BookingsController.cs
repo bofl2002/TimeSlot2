@@ -1,6 +1,9 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using TimeSlot.Models;
 using TimeSlot.Persistence;
 using TimeSlot.Services;
@@ -10,6 +13,7 @@ using TimeSlot.ViewModels;
 namespace TimeSlot.Controllers
 {
     [Authorize]
+    //[Authorize(Roles ="Admin")]
     public class BookingsController : Controller
     {
        
@@ -17,24 +21,39 @@ namespace TimeSlot.Controllers
         //private readonly IBookingRepository _bookingRepository;
         private readonly IBookingService _bookingService;
 
-        public BookingsController(IBookingService bookingService, IRoomRepository roomRepository)
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public BookingsController(IBookingService bookingService, IRoomRepository roomRepository, UserManager<ApplicationUser> userManager)
         {
             _bookingService = bookingService;
             _roomRepository = roomRepository;
+            _userManager = userManager;
         }
-        
-        public IActionResult Index()
+
+        public async Task<IActionResult> Index()
         {
-            var bookings = _bookingService.GetAll();
-            return View(bookings);
+            var userId = _userManager.GetUserId(User);
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
+            {
+                var allBookings = _bookingService.GetAll();
+                return View(allBookings);
+            }
+            else
+            {
+                var bookings = _bookingService.GetAllByUserId(userId);
+                return View(bookings);
+            }
+            
         }
+
 
         public IActionResult Add(int? id)
         {
-            ViewBag.Action = "add";
+            ViewBag.Action = "Add";
 
             var bookingVM = new BookingViewModel
             {
+                Booking = new Booking(),
                 Rooms = _roomRepository.GetAll()
             };
 
@@ -50,15 +69,19 @@ namespace TimeSlot.Controllers
         [HttpPost]
         public IActionResult Add(BookingViewModel bookingVM)
         {
+            ModelState.Remove("Booking.UserId");
+            ModelState.Remove("Booking.User");
+
             if (!ModelState.IsValid)
             {
                 bookingVM.Rooms = _roomRepository.GetAll();
-                ViewBag.Action = "add";
-
+                ViewBag.Action = "Add";
                 return View(bookingVM);
             }
             try
             {
+                var userId = _userManager.GetUserId(User);
+                bookingVM .Booking.UserId = userId;
                 _bookingService.Add(bookingVM.Booking);
                 return RedirectToAction("Index");
             }
@@ -66,11 +89,9 @@ namespace TimeSlot.Controllers
             {
                 ModelState.AddModelError("", ex.Message);
                 bookingVM.Rooms = _roomRepository.GetAll();
-                ViewBag.Action = "add";
+                ViewBag.Action = "Add";
                 return View(bookingVM);
             }
-            _bookingService.Add(bookingVM.Booking);
-            return RedirectToAction("Index");
         }
 
         public IActionResult Edit(int? id)
